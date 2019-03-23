@@ -91,7 +91,7 @@ def predict():
         return render_template('home.html', Score1='%.4f'%toxic, Score2='%.4f'%severe_toxic, Score3='%.4f'%obsence, Score4='%.4f'%threat, Score5='%.4f'%insult, Score6='%.4f'%identity_hate)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=4500)
 
 
 
