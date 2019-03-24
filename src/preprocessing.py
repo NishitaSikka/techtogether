@@ -1,11 +1,6 @@
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import time
-import re
 import operator
 
-################# VOCABULARY AND COVERAGE FUNCTIONS ###############
+
 def build_vocab(texts):
     sentences = texts.apply(lambda x: x.split()).values
     vocab = {}
@@ -115,7 +110,6 @@ def clean_special_chars(text, punct, mapping):
     return text
 
 
-# Mispell words and slangs
 mispell_dict = {'colour': 'color', 'centre': 'center', 'favourite': 'favorite', 'travelling': 'traveling', 'counselling': 'counseling', 
                 'theatre': 'theater', 'cancelled': 'canceled', 'labour': 'labor', 'organisation': 'organization', 
                 'wwii': 'world war 2', 'citicise': 'criticize', 'youtu ': 'youtube ', 'Qoura': 'Quora', 'sallary': 'salary', 

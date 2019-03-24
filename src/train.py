@@ -1,10 +1,4 @@
-"""
-Created on Sat Sep 15 19:07:08 2018
 
-@author: Dang Minh Nguyen
-"""
-
-############### USER INPUT ####################
 # user input
 import argparse
 parser = argparse.ArgumentParser(description='Toxic comments prediction using Bidirectional LSTM')
@@ -15,7 +9,7 @@ parser.add_argument('--validation_split', default=0.2, type=float, help='size of
 parser.add_argument('--batch_size', default=256, type=int, help='batch size')
 parser.add_argument('--epochs', default=10, type=int, help='number of epochs')
 parser.add_argument('--clean_text', default=1, choices=[0,1], help='cleaning text during preprocessing step or not')
-#parser.add_argument('--use_gpu', default=1, choices=[0,1], help='use GPU or not')
+
 args = parser.parse_args()
 
 # configuration with editor
@@ -40,11 +34,8 @@ CLEAN_TEXT = args.clean_text
 #USE_GPU = args.use_gpu
 '''
 
-############### IMPORT LIBRARIES ##################
+
 print('Importing libaries...')
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 
 import os
 import sys
@@ -57,22 +48,11 @@ from keras.layers import Dense, Input, GlobalMaxPooling1D, SpatialDropout1D, Glo
 from keras.layers import MaxPooling1D, Embedding, LSTM, Bidirectional, Dropout, concatenate, BatchNormalization
 from keras.models import Model
 from keras.callbacks import ModelCheckpoint, EarlyStopping
-from keras.engine.topology import Layer, InputSpec
-from keras import initializers, regularizers, constraints, optimizers, layers
-import keras.backend as K
 from preprocessing import *
-
-#import nltk
-#from nltk import WordNetLemmatizer
-import re
-from textblob import TextBlob
 import pickle
 
 import keras.backend as K
-#if (len(K.tensorflow_backend._get_available_gpus()) > 0) and USE_GPU==1:
-  #from keras.layers import CuDNNLSTM as LSTM
 
-# Set fitting condition
 model_dir = './models'
 if not os.path.exists(''):
     os.makedirs(model_dir, exist_ok=True)
@@ -87,12 +67,6 @@ with open(os.path.join('pretrained/glove.6B/glove.6B.%sd.txt' % EMBEDDING_DIM)) 
     vec = np.asarray(values[1:], dtype='float32')
     word2vec[word] = vec
 print('Found %s word vectors.' % len(word2vec))
-    
-
-################ PREPROCESSING DATA ####################
-# ---------- Load and clean text --------------#
-# Load train data
-print('Loading in comments...')
 
 train_orig = pd.read_csv("../data_train/train.csv")
 possible_labels = ["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]
@@ -116,34 +90,27 @@ else:
     train['comment_text'] = train_orig['comment_text']
 sentences = train["comment_text"].fillna("DUMMY_VALUE").values
 
-#---------Tokenizing--------#
 
 # Tokenize
 tokenizer = Tokenizer(num_words=MAX_VOCAB_SIZE)
 tokenizer.fit_on_texts(sentences)
 sequences = tokenizer.texts_to_sequences(sentences)
 
-# Print status
 print('Max sequence length: %i' % max(len(s) for s in sequences))
 print('Min sequence length: %i' % min(len(s) for s in sequences))
 seq_length = [len(s) for s in sequences]
 print('Median sequence length: %i' %np.median(seq_length))
 
-# Word -> integer mapping
 word2idx = tokenizer.word_index
 print('Found %i unique tokens' %len(word2idx))
 
-# Save the tokenizer
 print('Saving tokens ...')
 with open(model_dir+'/tokenizer.pickle', 'wb') as handle:
      pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-#--------- Padding and embedding -------------#
-# Padding
 data = pad_sequences(sequences, maxlen=MAX_SEQUENCE_LENGTH, padding='post')
 print('Shape of data tensor: ', data.shape)
 
-# Prepare embedding matrix
 print('Filling pre-trained embeddings...')
 num_words = min(MAX_VOCAB_SIZE, len(word2idx) + 1)
 embedding_matrix = np.zeros((num_words, EMBEDDING_DIM))
@@ -162,7 +129,6 @@ embedding_layer = Embedding(
   trainable=False
 )
 
-################# BUILDING MODEL ###################
 '''
 # Attention layer
 class AttentionWeightedAverage(Layer):
@@ -232,7 +198,6 @@ x = SpatialDropout1D(0.1)(x)
 x = Bidirectional(GRU(64, return_sequences=True))(x)
 avg_pool = GlobalAveragePooling1D()(x)
 max_pool = GlobalMaxPooling1D()(x)
-#atten = AttentionWeightedAverage()(x)
 
 conc = concatenate([avg_pool, max_pool])
 conc = BatchNormalization()(conc)
