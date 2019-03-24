@@ -1,1 +1,1 @@
-web: gunicorn app:app
+web: pythonw app_toxic_comments.py
