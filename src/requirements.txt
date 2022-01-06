@@ -38,7 +38,7 @@ bz2file==0.98
 CacheControl==0.12.5
 cachetools==3.0.0
 calc==1.0
-celery==4.0.0
+celery==5.2.2
 Cerberus==1.2
 certifi==2018.10.15
 cffi==1.11.4
