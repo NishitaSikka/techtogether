@@ -205,7 +205,7 @@ public==2018.11.20
 py==1.5.2
 pyasn1==0.4.4
 pyasn1-modules==0.2.4
-pycares==2.3.0
+pycares==4.2.0
 pycodestyle==2.3.1
 pycosat==0.6.3
 pycparser==2.18
