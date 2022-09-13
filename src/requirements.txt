@@ -86,7 +86,7 @@ Flask-RESTful==0.3.6
 Flask-Script==2.0.5
 Flask-SQLAlchemy==2.1
 flex==6.13.2
-flower==0.9.1
+flower==1.2.0
 gast==0.2.2
 gensim==3.7.1
 genson==1.0.1
